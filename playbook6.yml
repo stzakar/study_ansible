@@ -6,6 +6,7 @@
   vars:
     source_folder: ./website2
     destin_folder: /var/www/html
+    sh_ipt_pwd: /etc/NetworkManager/dispatcher.d/pre-up.d/iptables.sh
   
   tasks:
    - name: Check and print destribution name
@@ -31,6 +32,16 @@
          protocol: tcp
          destination_ports: 80
          jump: ACCEPT
+
+     - name: IP tables save
+       shell: iptables-save > /etc/sysconfig/iptables
+
+    #  - name: IP tables restore rc.local
+    #    shell: echo 'iptables-restore < /etc/sysconfig/iptables' >> /etc/rc.local
+
+     - name: IP tables restore on pre-up
+       shell: echo -e "#!/bin/bash \niptables-restore < /etc/sysconfig/iptables" > {{sh_ipt_pwd}} && chmod +x {{sh_ipt_pwd}}
+
      when: ansible_os_family == "RedHat"
 #DEB     
    - name: Block for Debian
