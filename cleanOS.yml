@@ -1,0 +1,32 @@
+- name: delate apcahe/http and remove http files
+  hosts: linux_work
+  become: yes
+  
+  vars:
+   del_template: /var/www/html/*
+  
+  tasks:
+   - name: Defaine OS family
+     debug: var=ansible_os_family
+#RHD 
+   - name: RedHat tasks
+     block:
+
+     - name: Remove httpd
+       yum: name=httpd state=absent
+
+     - name: Remove files of website
+       shell: rm -rf {{ del_template }}
+     
+     when: ansible_os_family == "RedHat"
+#DEB  
+   - name: Debian tasks
+     block:
+
+     - name: Remove apache2
+       apt: name=apache2 state=absent
+
+     - name: Remove files of website
+       shell: rm -rf {{ del_template }}
+     
+     when: ansible_os_family == "Debian"
