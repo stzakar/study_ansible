@@ -43,13 +43,13 @@
        service: name=apache2 state=started enabled=yes 
 
      when: ansible_os_family == "Debian"
-#копирование содержимого дирриктории
-  #  - name: cp files for websites
-  #    copy: src={{ item }} dest={{ destin_folder }} mode=555
-  #    with_fileglob: "{{ source_folder }}/*.*"
-  #    notify: 
-  #     - Restart Apache RedHat
-  #     - Restart Apache Debian
+#Копирование содержимого дирриктории
+   - name: cp files for websites
+     copy: src={{ item }} dest={{ destin_folder }} mode=555
+     with_fileglob: "{{ source_folder }}/*.*"
+     notify: 
+      - Restart Apache RedHat
+      - Restart Apache Debian
 
 #Копирование файлов по именно
   #  - name: cp files for websites
