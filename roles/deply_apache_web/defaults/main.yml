@@ -1,0 +1,4 @@
+---
+# defaults file for deply_apache_web
+destin_folder: /var/www/html
+sh_ipt_pwd: /etc/NetworkManager/dispatcher.d/pre-up.d/iptables.sh

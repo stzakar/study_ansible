@@ -1,0 +1,7 @@
+- name: Install apache
+  hosts: linux_work
+  become: yes
+
+  roles:
+#    - deply_apache_web
+    - { role: deply_apache_web, when: ansible_system == 'Linux' }

@@ -1,0 +1,7 @@
+- name: delate apcahe/http and remove http files
+  hosts: linux_work
+  become: yes
+
+  tasks:
+    - name: shutdown
+      shell: init 0
