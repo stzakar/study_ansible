@@ -1,0 +1,29 @@
+---
+- hosts: all
+  tasks:
+    - name: Remote login
+      become: yes
+      shell: ssh user@ubuntu18
+
+---
+- hosts: all
+  tasks:
+    - name: Change default password
+      become: yes
+      shell: passwd
+
+---
+- hosts: all
+  tasks:
+    - name: Create a new user
+      become: yes
+      user:
+        name: super
+        password: 12345678
+
+---
+- hosts: all 
+  tasks:
+    - name: Change the SSH port
+      become: yes
+      shell: sed -i 's/Port 22/2122/g' /etc/ssh/sshd_config

@@ -1,0 +1,31 @@
+---
+- name: Loops Play Book
+  hosts: linux_work
+  become: yes
+
+  tasks:
+   - name: loop with items
+     debug: msg="hello {{ item }}"
+     loop:
+      - "1"
+      - "2"
+      - "3"
+      - "4"
+
+   - name: loop until 
+     shell: echo -n Z >> myfile.txt && cat myfile.txt
+     register: output
+     delay: 2 #задержка между запусками
+     retries: 10 #по умолчанию 3
+     until: output.stdout.find("ZZZZ") == false
+  
+   - name: Print final output
+     debug: var=output.stdout
+
+   - name: Install many packages
+     yum: name={{ item }} state=installed
+     loop:
+       - mc
+       - vim
+       - python
+       - mysql-client

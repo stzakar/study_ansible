@@ -1,0 +1,41 @@
+---
+- name: Test debag and msg
+  hosts: linux_work
+  become: yes
+
+  vars:
+   message1: hi
+   message2: World
+   secret: DASDWEWEWEQSDAS
+
+  tasks:
+
+   - name: print debug msg
+     debug:
+       var: secret
+   
+   - debug:
+       msg: "secretnoe slovo {{ secret }}"
+   
+   - debug:
+       msg: "Vladelec -->{{ owner }}<--" #owner in host file
+
+   - set_fact: full_message="{{ message1 }} {{ message2 }} from {{ owner }}"
+               
+   - debug:
+       msg: "{{ full_message }}"
+   
+   - debug:
+       var: ansible_distribution
+  
+   - shell: ip a
+     register: upt
+
+   - set_fact: | 
+       full_net="{{ upt.stdout_lines.0 }}
+       {{ upt.stdout_lines.2 }}
+       {{ upt.stdout_lines.6 }}
+       {{ upt.stdout_lines.8 }}"
+
+   - debug:
+       var: full_net

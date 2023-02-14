@@ -1,0 +1,14 @@
+---
+- name: Install apache
+  hosts: cent_servers
+  become: yes
+
+  tasks:
+   - name: install apache webserver
+     yum: name=httpd state=latest
+
+   - name: Start and enable apache on the boot
+     service: name=httpd state=started enabled=yes 
+
+   - name: Iptables enable port 80
+     shell: iptables -I INPUT 1 -m state --state NEW -m tcp -p tcp --dport 80 -j ACCEPT

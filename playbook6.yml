@@ -1,0 +1,79 @@
+---
+- name: Install apache
+  hosts: linux_work
+  become: yes
+  
+  vars:
+    source_folder: ./website2
+    destin_folder: /var/www/html
+  
+  tasks:
+   - name: Check and print destribution name
+     debug: var=ansible_os_family
+#RHD
+   - name: Block for RedHat
+     block:
+
+     - name: install apache webserver RedHat
+       yum: name=httpd state=latest
+     
+     - name: Start and enable apache on the boot RedHat family os
+       service: name=httpd state=started enabled=yes
+     
+     - name: Iptables enable port 80
+       iptables:
+         comment: Allow 80 port HTTP #    shell: iptables -I INPUT 1 -m state --state NEW -m tcp -p tcp --dport 80 -j ACCEPT
+         chain_management: true #Разрешаем управление iptables
+         state: present #Если правила нет то создать если есть то ничего не делать
+         action: insert #по умолчанию append - добавляет в конец
+         chain: INPUT
+         ctstate: NEW
+         protocol: tcp
+         destination_ports: 80
+         jump: ACCEPT
+     when: ansible_os_family == "RedHat"
+#DEB     
+   - name: Block for Debian
+     block:    
+     
+     - name: install apache webserver RedHat
+       apt: name=apache2 state=latest
+
+     - name: Start and enable apache on the boot Debian family os
+       service: name=apache2 state=started enabled=yes 
+
+     when: ansible_os_family == "Debian"
+#копирование содержимого дирриктории
+  #  - name: cp files for websites
+  #    copy: src={{ item }} dest={{ destin_folder }} mode=555
+  #    with_fileglob: "{{ source_folder }}/*.*"
+  #    notify: 
+  #     - Restart Apache RedHat
+  #     - Restart Apache Debian
+
+#Копирование файлов по именно
+  #  - name: cp files for websites
+  #    copy: src={{ source_folder }}/{{ item }} dest={{ destin_folder }} mode=555
+  #    loop:
+  #      - "index.html"
+  #      - "001ac50ae2f81bc02383f1b5b0d58bee.png"
+  #      - "05c1ad48339d45443155ba8c24a60afe.png"
+  #      - "09bfc7d55146faeff0f90cf054c0fe60.png"
+  #      - "52dfbd15826910d58f77acabd8ee5fa6.png"
+  #      - "66d5586cfbdb74b43ff05a47ade4ad49.png"
+  #      - "a4ad1ffdc175497e9f1a1885d62424bc.png"
+  #      - "d041f4b6415f09ba64a66a7f8c9176e7.png"
+  #      - "ed2124b8afc2d09a73072af4f8c58ff6.png"
+  #    notify: 
+  #     - Restart Apache RedHat
+  #     - Restart Apache Debian
+
+#Handlers добавили условия OS family для правильного срабатывания  
+  handlers:
+    - name: Restart Apache RedHat
+      service: name=httpd state=restarted
+      when: ansible_os_family == "RedHat"
+
+    - name: Restart Apache Debian
+      service: name=apache2 state=restarted
+      when: ansible_os_family == "Debian"

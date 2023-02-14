@@ -1,0 +1,26 @@
+---
+- name: Install apache
+  hosts: cent_servers
+  become: yes
+  
+  vars:
+    source_file: ./website/index.html
+    destin_file: /var/www/html
+  
+  tasks:
+   - name: install apache webserver
+     yum: name=httpd state=latest
+
+   - name: coppy index.html
+     copy: src={{source_file}} dest={{destin_file}}     
+
+   - name: Start and enable apache on the boot
+     service: name=httpd state=started enabled=yes 
+     notify: Restart Apache
+
+   - name: Iptables enable port 80
+     shell: iptables -I INPUT 1 -m state --state NEW -m tcp -p tcp --dport 80 -j ACCEPT
+
+  handlers:
+    - name: Restart Apache
+      service: name=httpd state=restarted

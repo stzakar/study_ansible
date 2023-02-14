@@ -1,0 +1,33 @@
+---
+
+ - comand1
+ 
+ - comand2
+ 
+- fruits:      #команда
+   - aple      #ее атрибуты в формате list
+   - orange
+   - mango 
+
+- vegetables:
+   - carrots
+   - cucumbers
+
+- maksim:
+   nick: "keks: krutoy"
+   position: developer
+   skils:
+     - hp
+     - bash
+
+- andrey:
+  nick: dron
+  position: manager
+  skils:
+    - office
+
+- kol { nick: kolyan, position: administrator, skills: [ 'killer' 'cliner' ] }
+
+  fruits[ 'apple', 'orange', 'mango' ]
+     
+...

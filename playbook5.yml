@@ -1,0 +1,63 @@
+---
+- name: Install apache
+  hosts: linux_work
+  become: yes
+  
+  vars:
+    source_file: ./website/index.html
+    destin_file: /var/www/html
+  
+  tasks:
+   - name: Check and print destribution name
+     debug: var=ansible_os_family
+
+   - name: Block for RedHat
+     block:
+
+     - name: install apache webserver RedHat
+       yum: name=httpd state=latest
+     
+     - name: coppy index.html
+       copy: src={{source_file}} dest={{destin_file}} mode=555
+       notify: Restart Apache RedHat
+     
+     - name: Start and enable apache on the boot RedHat family os
+       service: name=httpd state=started enabled=yes
+     
+     - name: Iptables enable port 80
+       iptables:
+         comment: Allow 80 port HTTP
+         chain_management: true #Разрешаем управление iptables
+         state: present #Если правила нет то создать если есть то ничего не делать
+         action: insert #по умолчанию append - добавляет в конец
+         chain: INPUT
+         ctstate: NEW
+         protocol: tcp
+         destination_ports: 80
+         jump: ACCEPT
+
+  #    shell: iptables -I INPUT 1 -m state --state NEW -m tcp -p tcp --dport 80 -j ACCEPT
+     
+     when: ansible_os_family == "RedHat"
+     
+   - name: Block for Debian
+     block:    
+     
+     - name: install apache webserver RedHat
+       apt: name=apache2 state=latest
+
+     - name: coppy index.html
+       copy: src={{source_file}} dest={{destin_file}} mode=555
+       notify: Restart Apache Debian
+
+     - name: Start and enable apache on the boot Debian family os
+       service: name=apache2 state=started enabled=yes 
+
+     when: ansible_os_family == "Debian"
+
+  handlers:
+    - name: Restart Apache RedHat
+      service: name=httpd state=restarted
+    
+    - name: Restart Apache Debian
+      service: name=apache2 state=restarted

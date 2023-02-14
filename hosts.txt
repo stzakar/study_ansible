@@ -1,0 +1,26 @@
+[cent_servers]
+centos ansible_host=192.168.4.40 owner=zakar_cent
+
+[deb_servers]
+debian ansible_host=192.168.4.42 owner=zakar_deb
+
+[cent_servers_hm]
+centos_home ansible_host=192.168.122.57 
+
+[deb_servers_hm]
+debian_home ansible_host=192.168.122.53 
+
+#Home ip of servers
+[linux_home:children]
+cent_servers_hm
+deb_servers_hm
+
+#Work ip of servers
+[linux_work:children]
+cent_servers
+deb_servers
+
+[linux_ALL:children]
+linux_home
+linux_work
+
