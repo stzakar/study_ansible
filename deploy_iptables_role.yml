@@ -1,0 +1,9 @@
+- name: deploy
+  hosts: "{{ hosts }}"
+  become: yes
+
+  roles:
+# Ping hosts
+    - { role: deploy_iptables, when: ansible_system == 'Linux' }
+
+#ansible-playbook deploy_iptables_role.yml --extra-var "hosts=linux_work"

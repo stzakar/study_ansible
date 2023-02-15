@@ -26,4 +26,4 @@
   tasks:
     - name: Change the SSH port
       become: yes
-      shell: sed -i 's/Port 22/2122/g' /etc/ssh/sshd_config
+      shell: sed -i 's/Port 22/Port 2122/g' /etc/ssh/sshd_config

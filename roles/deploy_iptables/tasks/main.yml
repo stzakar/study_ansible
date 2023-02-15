@@ -1,0 +1,35 @@
+---
+# tasks file for deploy_iptables
+- name: RedHat OS family
+  block:
+   - name: Iptables enable port 80
+     iptables:
+        comment: Allow 80 port HTTP 
+        chain_management: true        
+        state: present                
+        action: insert                
+        chain: INPUT
+        ctstate: NEW
+        protocol: tcp
+        destination_ports: 80
+        jump: ACCEPT
+
+   - name: Iptables enable port 22
+     iptables:
+        comment: Allow 22 port ssh 
+        chain_management: true        
+        state: present                
+        action: insert                
+        chain: INPUT
+        ctstate: NEW
+        protocol: tcp
+        destination_ports: 22
+        jump: ACCEPT
+  
+  notify:
+    - IP_tables_save
+    - IP_tables_restore
+  
+  when: ansible_os_family == "RedHat"
+  
+

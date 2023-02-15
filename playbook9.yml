@@ -1,0 +1,7 @@
+- name: Install apache
+  hosts: "{{ MYHOSTS }}"
+  become: yes
+
+  roles:
+# Ping hosts
+    - { role: ping_pong, when: ansible_system == 'Linux' }

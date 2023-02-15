@@ -1,7 +1,10 @@
 - name: delate apcahe/http and remove http files
-  hosts: linux_work
+  hosts: "{{ hosts }}"
   become: yes
 
   tasks:
     - name: shutdown
-      shell: init 0
+      shell: init 0 
+
+# ansible-playbook OFF_work_linux.yml --extra-var "hosts=linux_work"
+# ansible-playbook OFF_work_linux.yml --extra-var "hosts=linux_home"

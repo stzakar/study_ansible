@@ -1,0 +1,3 @@
+---
+# defaults file for deploy_iptables
+cent_ipt_pwd: /etc/NetworkManager/dispatcher.d/pre-up.d/iptables.sh
