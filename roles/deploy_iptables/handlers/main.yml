@@ -1,6 +1,6 @@
 ---
 # handlers file for deploy_iptables
-- name:  Cent OS vars
+- name:  Cent OS handlers
   block:
    - name: IP_tables_save
      shell: iptables-save > /etc/sysconfig/iptables

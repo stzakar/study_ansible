@@ -1,0 +1,16 @@
+- name: Create file1
+  copy:
+    dest: /home/test_fold1/file1.txt
+    content: |
+      Text Line1, in file1
+      Text Line2, in file2
+      Text Line3, {{ mytext }}
+
+- name: Create file2
+  copy:
+    dest: /home/test_fold2/file1.txt
+    content: |
+      OS {{ ansible_distribution }} version: {{ ansible_distribution_major_version }}
+      Default ip: {{ ansible_default_ipv4.address }}
+      Kernel: {{ ansible_kernel }}
+      Text Line3, {{ mytext }}

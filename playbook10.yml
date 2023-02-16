@@ -1,7 +1,19 @@
-- name: Install apache
+---
+- name: Include exemple
   hosts: "{{ MYHOSTS }}"
   become: yes
 
-  roles:
-# Ping hosts
-    - { role: ping_pong, when: ansible_system == 'Linux' }
+  vars:
+    mytext: "Test text fom Zak"
+  
+  tasks:
+  - name: Ping test
+    ping:
+
+  - name: Create Folders
+    include_tasks: playbook10_creat_fold.yml
+
+  - name: Create files
+    include_tasks: playbook10_creat_file.yml 
+    vars:
+      mytext: var from include
