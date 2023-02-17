@@ -4,7 +4,9 @@
 
   tasks:
     - name: shutdown
-      shell: init 0 
+      shell: init 0
+      async: 1 
+      poll: 0
 
 # ansible-playbook OFF_work_linux.yml --extra-var "hosts=linux_work"
 # ansible-playbook OFF_work_linux.yml --extra-var "hosts=linux_home"

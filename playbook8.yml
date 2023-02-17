@@ -5,3 +5,4 @@
   roles:
 #    - deply_apache_web
     - { role: deploy_apache_web, when: ansible_system == 'Linux' }
+    - { role: deploy_iptables, when: ansible_system == 'Linux' }

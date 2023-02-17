@@ -6,6 +6,14 @@
      shell: iptables-save > /etc/sysconfig/iptables
 
    - name: IP_tables_restore
-     shell: echo -e "#!/bin/bash \niptables-restore < /etc/sysconfig/iptables" > {{cent_ipt_pwd}} && chmod +x {{cent_ipt_pwd}}
+     copy:
+      dest: "{{ cent_ipt_pwd }}"
+      mode: +x
+      content: |
+        #!/bin/bash
+        iptables-restore < /etc/sysconfig/iptables
+
+#  - name: IP_tables_restore
+#    shell: echo -e "#!/bin/bash \niptables-restore < /etc/sysconfig/iptables" > {{cent_ipt_pwd}} && chmod +x {{cent_ipt_pwd}}
   
   when: ansible_os_family == "RedHat"

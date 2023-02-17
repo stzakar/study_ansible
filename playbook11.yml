@@ -1,0 +1,50 @@
+---
+- name: Include exemple
+  hosts: linux_work
+  #hosts: "{{ MYHOSTS }}"
+  become: yes
+
+  vars:
+    mytext: "Test text fom Zak"
+  
+  tasks:
+  - name: Ping test
+    ping:
+
+
+  - name: Create file1
+    copy:
+      dest: /home/file1.txt
+      content: |
+        Text Line1, in file1
+        Text Line2, in file2
+        Text Line3, {{ mytext }}
+
+  - name: Create file2
+    copy:
+      dest: /home/file2.txt
+      content: |
+        OS {{ ansible_distribution }} version: {{ ansible_distribution_major_version }}
+        Default ip: {{ ansible_default_ipv4.address }}
+        Kernel: {{ ansible_kernel }}
+        Text Line3, {{ mytext }}
+    delegate_to: debian
+
+  - name: tasks for ansible master (local machine)
+    shell: echo "This server {{ inventory_hostname }} was deregistered from our Load Balancer, node name is {{ ansible_nodename }}" >> /home/log.txt
+    delegate_to: 127.0.0.1
+
+  - name: reboot
+    shell: sleep 3 && reboot now
+    # закинуть команду и не ждать закрытия сессии
+    async: 1 #сколько ждать максимально
+    poll: 0 #Ansible starts the task and immediately moves on to the next task without waiting for a result. 
+
+  - name: Wait till servers up
+    wait_for:
+      #host: "{{ inventory_hostname }}"
+      host: linux_work
+      state: started
+      delay: 5
+      timeout: 40
+    delegate_to: 127.0.0.1

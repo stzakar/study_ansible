@@ -12,23 +12,23 @@
    - name: Start and enable apache on the boot RedHat family os
      service: name=httpd state=started enabled=yes
      
-   - name: Iptables enable port 80
-     iptables:
-       comment: Allow 80 port HTTP   #    shell: iptables -I INPUT 1 -m state --state NEW -m tcp -p tcp --dport 80 -j ACCEPT
-       chain_management: true        #Разрешаем управление iptables
-       state: present                #Если правила нет то создать если есть то ничего не делать
-       action: insert                #По умолчанию append - добавляет в конец
-       chain: INPUT
-       ctstate: NEW
-       protocol: tcp
-       destination_ports: 80
-       jump: ACCEPT
+  #  - name: Iptables enable port 80
+  #    iptables:
+  #      comment: Allow 80 port HTTP   #    shell: iptables -I INPUT 1 -m state --state NEW -m tcp -p tcp --dport 80 -j ACCEPT
+  #      chain_management: true        #Разрешаем управление iptables
+  #      state: present                #Если правила нет то создать если есть то ничего не делать
+  #      action: insert                #По умолчанию append - добавляет в конец
+  #      chain: INPUT
+  #      ctstate: NEW
+  #      protocol: tcp
+  #      destination_ports: 80
+  #      jump: ACCEPT
 
-   - name: IP tables save
-     shell: iptables-save > /etc/sysconfig/iptables
+  #  - name: IP tables save
+  #    shell: iptables-save > /etc/sysconfig/iptables
 
-   - name: IP tables restore on pre-up
-     shell: echo -e "#!/bin/bash \niptables-restore < /etc/sysconfig/iptables" > {{sh_ipt_pwd}} && chmod +x {{sh_ipt_pwd}}
+  #  - name: IP tables restore on pre-up
+  #    shell: echo -e "#!/bin/bash \niptables-restore < /etc/sysconfig/iptables" > {{sh_ipt_pwd}} && chmod +x {{sh_ipt_pwd}}
 
   when: ansible_os_family == "RedHat"
 #DEB     
