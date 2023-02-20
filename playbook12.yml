@@ -1,0 +1,29 @@
+- name: Error Handling
+  hosts: linux_work
+  become: yes
+  any_errors_fatal: true
+
+  tasks:
+    - name: Task 1
+      yum: name=treeee state=latest
+      ignore_errors: yes
+
+    - name: Task 2
+      shell: ls -la /home/
+      register: ls_res
+      failed_when: ls_res.rc != 0
+#      failed_when: "'file3' in ls_res.stdout"
+
+    - debug:
+        var: ls_res
+
+    - name: Task 3
+      shell: cat /home/test1.txt
+      register: cat_res
+
+
+    - name: Task 4
+      shell: echo privert
+
+    - name: Task 5
+      shell: echo privert 2
